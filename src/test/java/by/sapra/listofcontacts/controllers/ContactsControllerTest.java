@@ -75,9 +75,17 @@ public class ContactsControllerTest {
                 .andExpect(content().string(containsString("<th>Email</th>")))
                 .andExpect(content().string(containsString("<th>Phone</th>")))
                 .andExpect(content().string(containsString("<td>1</td>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/edit/1\">Edit</a>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/delete/1\">Delete</a>")))
                 .andExpect(content().string(containsString("<td>2</td>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/edit/2\">Edit</a>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/delete/2\">Delete</a>")))
                 .andExpect(content().string(containsString("<td>3</td>")))
-                .andExpect(content().string(containsString("<td>4</td>")));
+                .andExpect(content().string(containsString("<a href=\"/contact/edit/3\">Edit</a>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/delete/3\">Delete</a>")))
+                .andExpect(content().string(containsString("<td>4</td>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/edit/4\">Edit</a>")))
+                .andExpect(content().string(containsString("<a href=\"/contact/delete/4\">Delete</a>")));
     }
 
     @NotNull
