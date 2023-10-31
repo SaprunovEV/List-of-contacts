@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All contacts</title>
+</head>
+<body>
+<h1>All contacts</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contact : ${contactList.getContacts()}">
+        <td th:text="${contact.getId()}"></td>
+        <td th:text="${contact.getFirstName()}"></td>
+        <td th:text="${contact.getLastName()}"></td>
+        <td th:text="${contact.getEmail()}"></td>
+        <td th:text="${contact.getPhone()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
