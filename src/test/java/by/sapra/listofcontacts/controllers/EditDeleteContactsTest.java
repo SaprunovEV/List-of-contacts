@@ -2,16 +2,19 @@ package by.sapra.listofcontacts.controllers;
 
 import by.sapra.listofcontacts.services.ContactService;
 import by.sapra.listofcontacts.services.model.ContactModel;
+import by.sapra.listofcontacts.services.model.ContactPayload;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
@@ -29,7 +32,6 @@ public class EditDeleteContactsTest {
         prepareTest(id);
 
         mockMvc.perform(get("/contact/edit/{id}", 1))
-                .andDo(print())
                 .andExpect(view().name("edit"))
                 .andExpect(status().isOk());
     }
@@ -49,10 +51,40 @@ public class EditDeleteContactsTest {
         ContactModel contactModel = prepareTest(id);
 
         mockMvc.perform(get("/contact/edit/{id}", id))
-                .andDo(print())
                 .andExpect(model().attribute("contact", contactModel));
 
         verify(contactService, times(1)).getContactById(id);
+    }
+
+    @Test
+    void shouldRedirectToContactsPage() throws Exception {
+        ContactPayload payload = getPayload();
+
+        mockMvc.perform(postRequest("/contact/edit", payload))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"));
+
+        verify(contactService, times(1)).editContact(payload);
+    }
+
+    @NotNull
+    private MockHttpServletRequestBuilder postRequest(String url, ContactPayload payload) {
+        return post(url)
+                .param("id", payload.getId())
+                .param("firstName", payload.getFirstName())
+                .param("lastName", payload.getLastName())
+                .param("email", payload.getEmail())
+                .param("phone", payload.getPhone());
+    }
+
+    private ContactPayload getPayload() {
+        return ContactPayload.builder()
+                .id("1")
+                .firstName("first")
+                .lastName("last")
+                .email("test@email.test")
+                .phone("+375291234567")
+                .build();
     }
 
     private ContactModel prepareTest(String id) {
