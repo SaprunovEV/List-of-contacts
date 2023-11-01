@@ -6,23 +6,6 @@
 </head>
 <body>
 <h1>Create a contact</h1>
-<form action="/contact/create" method="post">
-  <input type="hidden" name="id" th:value="${contact.id}">
-  <div>
-    <label for="firstName">First Name</label>
-    <input type="text" name="firstName" id="firstName" required placeholder="first name" th:value="${contact.firstName}">
-  </div>
-  <div>
-    <label for="lastName">First Name</label>
-    <input type="text" name="lastName" id="lastName" required placeholder="last name" th:value="${contact.lastName}">
-  </div><div>
-  <label for="email">email</label>
-  <input type="text" name="email" id="email" required placeholder="email" th:value="${contact.email}">
-</div><div>
-  <label for="phone">phone</label>
-  <input type="text" name="phone" id="phone" required placeholder="phone" th:value="${contact.phone}">
-</div>
-  <button type="submit"></button>
-</form>
+<div th:insert="fragments/contact-form-fragment :: contact-form ('/contact/create')"></div>
 </body>
 </html>
