@@ -78,6 +78,18 @@ public class CreateEditContactsTest {
         verify(contactService, times(1)).createContact(payload);
     }
 
+    @Test
+    void shouldReturnOkFromCreatePage() throws Exception {
+        mockMvc.perform(get("/contact/create"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnPageWithEmptyContact() throws Exception {
+        mockMvc.perform(get("/contact/create"))
+                .andExpect(model().attribute("contact", ContactModel.builder().build()));
+    }
+
     @NotNull
     private MockHttpServletRequestBuilder postRequest(String url, ContactPayload payload) {
         return post(url)
