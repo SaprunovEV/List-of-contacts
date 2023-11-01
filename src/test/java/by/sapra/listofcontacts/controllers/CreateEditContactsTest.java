@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
-public class EditDeleteContactsTest {
+public class CreateEditContactsTest {
 
     @Autowired
     MockMvc mockMvc;
