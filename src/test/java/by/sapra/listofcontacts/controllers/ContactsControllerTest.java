@@ -88,6 +88,19 @@ public class ContactsControllerTest {
                 .andExpect(content().string(containsString("<a href=\"/contact/delete/4\">Delete</a>")));
     }
 
+    @Test
+    void shouldHaveRefToCreateNewContact() throws Exception {
+        ContactList contactList = ContactList.builder()
+                .contacts(getContacts())
+                .build();
+
+        when(contactService.getAll())
+                .thenReturn(contactList);
+
+        mockMvc.perform(get("/contacts"))
+                .andExpect(content().string(containsString("<a href=\"/contact/create\">Create</a>")));
+    }
+
     @NotNull
     private static List<ContactModel> getContacts() {
         return List.of(
