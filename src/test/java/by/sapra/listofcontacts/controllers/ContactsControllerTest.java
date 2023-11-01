@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -99,6 +100,17 @@ public class ContactsControllerTest {
 
         mockMvc.perform(get("/contacts"))
                 .andExpect(content().string(containsString("<a href=\"/contact/create\">Create</a>")));
+    }
+
+    @Test
+    void shouldDeleteTheContactById() throws Exception {
+        String id = "1";
+
+        mockMvc.perform(post("/contact/delete/{id}", id))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"));
+
+        verify(contactService, times(1)).deleteContactById(id);
     }
 
     @NotNull
