@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/contact")
 @RequiredArgsConstructor
-public class EditDeleteContactsController {
+public class EditContactsController {
     private final ContactService contactService;
 
     @GetMapping("/edit/{id}")
