@@ -57,6 +57,15 @@ public class CreateEditContactsTest {
     }
 
     @Test
+    void shouldHaveActionToEditContact() throws Exception {
+        String id = "1";
+        prepareTest(id);
+
+        mockMvc.perform(get("/contact/edit/{id}", id))
+                .andExpect(content().string(containsString("action=\"/contact/edit\" method=\"post\"")));
+    }
+
+    @Test
     void shouldRedirectToContactsPage() throws Exception {
         ContactPayload payload = getPayload();
 
@@ -82,6 +91,12 @@ public class CreateEditContactsTest {
     void shouldReturnOkFromCreatePage() throws Exception {
         mockMvc.perform(get("/contact/create"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldHaveActionToCreateContact() throws Exception {
+        mockMvc.perform(get("/contact/create"))
+                .andExpect(content().string(containsString("action=\"/contact/create\" method=\"post\"")));
     }
 
     @Test
