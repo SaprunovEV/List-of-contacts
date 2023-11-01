@@ -67,6 +67,17 @@ public class CreateEditContactsTest {
         verify(contactService, times(1)).editContact(payload);
     }
 
+    @Test
+    void shouldCreateContactAndRedirectToContactsPage() throws Exception {
+        ContactPayload payload = getPayload();
+
+        mockMvc.perform(postRequest("/contact/create", payload))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"));
+
+        verify(contactService, times(1)).createContact(payload);
+    }
+
     @NotNull
     private MockHttpServletRequestBuilder postRequest(String url, ContactPayload payload) {
         return post(url)

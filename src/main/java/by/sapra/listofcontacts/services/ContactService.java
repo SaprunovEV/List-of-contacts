@@ -10,4 +10,6 @@ public interface ContactService {
     ContactModel getContactById(String id);
 
     void editContact(ContactPayload payload);
+
+    void createContact(ContactPayload payload);
 }
