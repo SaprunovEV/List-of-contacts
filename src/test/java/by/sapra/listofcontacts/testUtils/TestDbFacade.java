@@ -20,7 +20,7 @@ public class TestDbFacade {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public ContactEntity find(Integer id) {
+    public ContactEntity find(Long id) {
         return transactionTemplate.execute(status -> {
             String sql = "SELECT * FROM contact WHERE id = ?;";
             return DataAccessUtils.singleResult(
