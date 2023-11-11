@@ -11,11 +11,11 @@ public class ContactRowMapper implements RowMapper<ContactEntity> {
     public ContactEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 
         return ContactEntity.builder()
-                .id(rs.getLong(ContactEntity.Fields.id))
-                .email(rs.getString(ContactEntity.Fields.email))
-                .firstName(rs.getString(ContactEntity.Fields.lastName))
-                .lastName(rs.getString(ContactEntity.Fields.lastName))
-                .phone(rs.getString(ContactEntity.Fields.phone))
+                .id(rs.getLong("id"))
+                .email(rs.getString("email"))
+                .firstName(rs.getString("first_name"))
+                .lastName(rs.getString("last_name"))
+                .phone(rs.getString("phone"))
                 .build();
     }
 }
