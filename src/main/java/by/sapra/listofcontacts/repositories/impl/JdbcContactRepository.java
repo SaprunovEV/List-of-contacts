@@ -4,7 +4,10 @@ import by.sapra.listofcontacts.model.ContactEntity;
 import by.sapra.listofcontacts.model.mappers.ContactRowMapper;
 import by.sapra.listofcontacts.repositories.ContactRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +25,13 @@ public class JdbcContactRepository implements ContactRepository {
 
     @Override
     public Optional<ContactEntity> findById(Long id) {
-        return Optional.empty();
+        String sql = "SELECT * FROM contact WHERE id = ?";
+        ContactEntity contactEntity = DataAccessUtils.singleResult(jdbcTemplate.query(
+                sql,
+                new ArgumentPreparedStatementSetter(new Object[]{id}),
+                new RowMapperResultSetExtractor<>(new ContactRowMapper())
+        ));
+        return Optional.ofNullable(contactEntity);
     }
 
     @Override

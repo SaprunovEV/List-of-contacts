@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,5 +39,32 @@ class ContactRepositoryTest extends AbstractDataIntegrationTest {
             assertFalse(actual.isEmpty());
             actual.forEach(contact -> assertTrue(expected.contains(contact)));
         });
+    }
+
+    @Test
+    void shouldReturnNotEmptyOptionalIfDatabaseHaveEntityWithId() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.findById(expected.getId());
+
+        assertTrue(actual.isPresent());
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalIfIdWillNonPresent() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.findById(expected.getId() + 1);
+
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    void shouldReturnCorrectEntityById() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.findById(expected.getId());
+
+        assertEquals(expected, actual.get());
     }
 }
