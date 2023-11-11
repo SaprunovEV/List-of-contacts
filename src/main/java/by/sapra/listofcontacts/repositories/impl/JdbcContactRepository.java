@@ -20,6 +20,12 @@ public class JdbcContactRepository implements ContactRepository {
 
     @Override
     public Optional<ContactEntity> deleteById(Long id) {
+        Optional<ContactEntity> optional = findById(id);
+        if (optional.isPresent()) {
+            String sql = "DELETE FROM contact WHERE id = ?";
+            jdbcTemplate.update(sql, id);
+            return optional;
+        }
         return Optional.empty();
     }
 

@@ -67,4 +67,35 @@ class ContactRepositoryTest extends AbstractDataIntegrationTest {
 
         assertEquals(expected, actual.get());
     }
+
+    @Test
+    void shouldDeleteEntity() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.deleteById(expected.getId());
+
+        assertNull(getTestDbFacade().find(expected.getId()));
+    }
+
+    @Test
+    void shouldReturnDeletedOptionalWithDeletedEntity() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.deleteById(expected.getId());
+
+        assertAll(() -> {
+            assertTrue(actual.isPresent());
+            assertEquals(expected, actual.get());
+        });
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalIfEntityWillNotPresent() throws Exception {
+        ContactEntity expected = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().withFirstName("first1").build());
+
+        Optional<ContactEntity> actual = contactRepository.deleteById(expected.getId() + 1);
+
+        assertTrue(actual.isEmpty());
+    }
+
 }
