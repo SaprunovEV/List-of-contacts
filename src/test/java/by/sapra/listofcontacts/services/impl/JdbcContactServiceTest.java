@@ -172,7 +172,7 @@ public class JdbcContactServiceTest {
                 .firstName(firstName)
                 .lastName(lastName)
                 .phone(phone)
-                .id(Integer.valueOf(id))
+                .id(Long.valueOf(id))
                 .build();
         when(contactRepository.save(mapPayloadToEntity(payload))).thenReturn(expected);
 
@@ -191,7 +191,7 @@ public class JdbcContactServiceTest {
         List<ContactEntity> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             list.add(ContactEntity.builder()
-                            .id(i)
+                            .id((long)i)
                             .email("email" + i + "@email.test")
                             .firstName("first" + i)
                             .lastName("last" + i)
@@ -203,7 +203,7 @@ public class JdbcContactServiceTest {
 
     private static ContactEntity createEntity(String id, String firstName, String lastName, String email, String phone) {
         return ContactEntity.builder()
-                .id(id != null ? Integer.parseInt(id) : null)
+                .id(id != null ? Long.parseLong(id) : null)
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
