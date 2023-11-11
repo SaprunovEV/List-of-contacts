@@ -12,7 +12,7 @@ public class PostgresInit {
             .withDatabaseName("postgres")
             .withReuse(true);
 
-    public class PostgresApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    public static class PostgresApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             TestPropertyValues.of(
