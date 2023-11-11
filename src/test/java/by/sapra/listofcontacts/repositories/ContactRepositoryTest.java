@@ -1,6 +1,7 @@
 package by.sapra.listofcontacts.repositories;
 
 import by.sapra.listofcontacts.config.AbstractDataIntegrationTest;
+import by.sapra.listofcontacts.exceptions.ContactNotFoundException;
 import by.sapra.listofcontacts.model.ContactEntity;
 import by.sapra.listofcontacts.testUtils.ContactEntityTestDataBuilder;
 import org.junit.jupiter.api.Test;
@@ -109,5 +110,36 @@ class ContactRepositoryTest extends AbstractDataIntegrationTest {
             expected.setId(actual.getId());
             assertEquals(expected, actual);
         });
+    }
+
+    @Test
+    void shouldUpdateIfContactWillExist() throws Exception {
+        ContactEntity oldContact = getTestDbFacade().save(ContactEntityTestDataBuilder.aContact().build());
+
+        ContactEntity newContact = ContactEntityTestDataBuilder.aContact()
+                .withFirstName("newFirstName")
+                .build();
+
+        newContact.setId(oldContact.getId());
+
+        ContactEntity actual = contactRepository.save(newContact);
+
+        assertAll(() -> {
+            assertNotNull(actual);
+            ContactEntity editContact = getTestDbFacade().find(oldContact.getId());
+            assertNotNull(editContact);
+            assertEquals(editContact, getTestDbFacade().find(actual.getId()));
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionIfCantUpdateContact() throws Exception {
+        ContactEntity badContact = ContactEntityTestDataBuilder.aContact()
+                .withFirstName("newFirstName")
+                .build();
+
+        badContact.setId(System.currentTimeMillis());
+
+        assertThrows(ContactNotFoundException.class, () -> contactRepository.save(badContact));
     }
 }

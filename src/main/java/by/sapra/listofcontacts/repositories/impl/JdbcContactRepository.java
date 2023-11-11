@@ -1,5 +1,6 @@
 package by.sapra.listofcontacts.repositories.impl;
 
+import by.sapra.listofcontacts.exceptions.ContactNotFoundException;
 import by.sapra.listofcontacts.model.ContactEntity;
 import by.sapra.listofcontacts.model.mappers.ContactRowMapper;
 import by.sapra.listofcontacts.repositories.ContactRepository;
@@ -9,11 +10,13 @@ import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class JdbcContactRepository implements ContactRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -48,9 +51,20 @@ public class JdbcContactRepository implements ContactRepository {
 
     @Override
     public ContactEntity save(ContactEntity entity2save) {
-        entity2save.setId(System.currentTimeMillis());
-        String sql = "INSERT INTO contact (id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, entity2save.getId(), entity2save.getFirstName(), entity2save.getLastName(), entity2save.getEmail(), entity2save.getPhone());
-        return entity2save;
+        if (entity2save.getId() == null){
+            String sql = "INSERT INTO contact (id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)";
+            entity2save.setId(System.currentTimeMillis());
+            jdbcTemplate.update(sql, entity2save.getId(), entity2save.getFirstName(), entity2save.getLastName(), entity2save.getEmail(), entity2save.getPhone());
+            return entity2save;
+        }
+
+        Optional<ContactEntity> optional = findById(entity2save.getId());
+        if (optional.isPresent()) {
+            String sql = "UPDATE contact SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?";
+            jdbcTemplate.update(sql, entity2save.getFirstName(), entity2save.getLastName(), entity2save.getEmail(), entity2save.getPhone(), entity2save.getId());
+            return entity2save;
+        }
+
+        throw new ContactNotFoundException("Cant update contact with id = " + entity2save.getId() + " not fount contact!");
     }
 }
