@@ -48,6 +48,9 @@ public class JdbcContactRepository implements ContactRepository {
 
     @Override
     public ContactEntity save(ContactEntity entity2save) {
-        return null;
+        entity2save.setId(System.currentTimeMillis());
+        String sql = "INSERT INTO contact (id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, entity2save.getId(), entity2save.getFirstName(), entity2save.getLastName(), entity2save.getEmail(), entity2save.getPhone());
+        return entity2save;
     }
 }

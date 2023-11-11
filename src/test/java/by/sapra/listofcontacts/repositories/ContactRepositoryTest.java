@@ -98,4 +98,16 @@ class ContactRepositoryTest extends AbstractDataIntegrationTest {
         assertTrue(actual.isEmpty());
     }
 
+    @Test
+    void shouldSaveEntity() throws Exception {
+        ContactEntity expected = ContactEntityTestDataBuilder.aContact().build();
+
+        ContactEntity actual = contactRepository.save(expected);
+
+        assertAll(() -> {
+            assertNotNull(getTestDbFacade().find(actual.getId()));
+            expected.setId(actual.getId());
+            assertEquals(expected, actual);
+        });
+    }
 }
