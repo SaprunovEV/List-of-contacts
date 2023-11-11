@@ -1,43 +1,45 @@
 package by.sapra.listofcontacts.testUtils;
 
+import by.sapra.listofcontacts.model.ContactEntity;
+import by.sapra.listofcontacts.model.mappers.ContactRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.CallableStatement;
+
 public class TestDbFacade {
-    @Autowired
-    private TestEntityManager testEntityManager;
     @Autowired
     private TransactionTemplate transactionTemplate;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public <T> T find(Object id, Class<T> entityClass) {
-        return transactionTemplate.execute(status -> testEntityManager.find(entityClass, id));
+    public ContactEntity find(Integer id) {
+        return transactionTemplate.execute(status -> {
+            String sql = "SELECT * FROM contact WHERE id = ?;";
+            return DataAccessUtils.singleResult(
+                    jdbcTemplate.query(
+                            sql,
+                            new ArgumentPreparedStatementSetter(new Object[] {id}),
+                            new RowMapperResultSetExtractor<>(new ContactRowMapper() , 1)
+                    )
+            );
+        });
     }
 
-    public <T> T save(TestDataBuilder<T> builder) {
-        return transactionTemplate.execute(status -> testEntityManager.persistAndFlush(builder.build()));
-    }
+    public ContactEntity save(ContactEntity entity) {
+        return transactionTemplate.execute(status -> {
+            entity.setId(System.currentTimeMillis());
 
-    public <T> TestDataBuilder<T> persistOnce(TestDataBuilder<T> builder) {
-        return new TestDataBuilder<T>() {
-            private T entity;
+            String sql = "INSERT INTO contact (id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)";
+            jdbcTemplate.update(sql, entity.getId(), entity.getFirstName(), entity.getLastName(), entity.getEmail(), entity.getPhone());
 
-            @Override
-            public T build() {
-                if (entity == null) entity = persisted(builder).build();
-                return entity;
-            }
-        };
-    }
-
-    public <T> TestDataBuilder<T> persisted(TestDataBuilder<T> builder) {
-        return () -> transactionTemplate.execute(status -> {
-            final T entity = builder.build();
-            testEntityManager.persistAndFlush(entity);
             return entity;
         });
     }
