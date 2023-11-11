@@ -8,9 +8,10 @@ import by.sapra.listofcontacts.services.model.ContactModel;
 import by.sapra.listofcontacts.services.model.ContactPayload;
 import by.sapra.listofcontacts.services.model.RemovedId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 @RequiredArgsConstructor
 class JdbcContactService implements ContactService {
     private final ContactRepository contactRepository;
