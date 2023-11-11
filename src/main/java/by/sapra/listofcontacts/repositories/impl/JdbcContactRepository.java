@@ -16,12 +16,12 @@ public class JdbcContactRepository implements ContactRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<ContactEntity> deleteById(Integer id) {
+    public Optional<ContactEntity> deleteById(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<ContactEntity> findById(String id) {
+    public Optional<ContactEntity> findById(Long id) {
         return Optional.empty();
     }
 

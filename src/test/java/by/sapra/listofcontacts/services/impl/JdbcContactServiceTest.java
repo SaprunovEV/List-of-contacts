@@ -72,7 +72,7 @@ public class JdbcContactServiceTest {
         String email = "email@email.test";
         String phone = "+375291234567";
 
-        when(contactRepository.deleteById(Integer.valueOf(id))).thenReturn(
+        when(contactRepository.deleteById(Long.valueOf(id))).thenReturn(
                 Optional.of(createEntity(id, firstName, lastName, email, phone))
         );
 
@@ -80,7 +80,7 @@ public class JdbcContactServiceTest {
 
         assertEquals(id, actual.getData());
 
-        verify(contactRepository, times(1)).deleteById(Integer.valueOf(id));
+        verify(contactRepository, times(1)).deleteById(Long.valueOf(id));
     }
 
     @Test
@@ -89,11 +89,11 @@ public class JdbcContactServiceTest {
 
         ContactModel actual = contactService.getContactById(id);
 
-        when(contactRepository.findById(id)).thenReturn(Optional.empty());
+        when(contactRepository.findById(Long.parseLong(id))).thenReturn(Optional.empty());
 
         assertNull(actual, "возвращаемое значение должно быть null если репозиторий не нашел сущность");
 
-        verify(contactRepository, times(1)).findById(id);
+        verify(contactRepository, times(1)).findById(Long.parseLong(id));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class JdbcContactServiceTest {
         String phone = "+375291234567";
         ContactEntity contactEntity = createEntity(id, firstName, lastName, email, phone);
 
-        when(contactRepository.findById(id)).thenReturn(Optional.of(contactEntity));
+        when(contactRepository.findById(Long.parseLong(id))).thenReturn(Optional.of(contactEntity));
 
         ContactModel actual = contactService.getContactById(id);
 
@@ -224,7 +224,7 @@ public class JdbcContactServiceTest {
     }
 
     private void assertContactModel(ContactEntity expected, ContactModel actual) {
-        assertEquals(expected.getId(), Integer.valueOf(actual.getId()));
+        assertEquals(expected.getId(), Long.valueOf(actual.getId()));
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getLastName(), actual.getLastName());
         assertEquals(expected.getEmail(), actual.getEmail());

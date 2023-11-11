@@ -27,7 +27,7 @@ class JdbcContactService implements ContactService {
 
     @Override
     public ContactModel getContactById(String id) {
-        Optional<ContactEntity> optional = contactRepository.findById(id);
+        Optional<ContactEntity> optional = contactRepository.findById(Long.parseLong(id));
         if (optional.isPresent()) {
             ContactEntity entity = optional.get();
             return mapToModel(entity);
@@ -49,7 +49,7 @@ class JdbcContactService implements ContactService {
 
     @Override
     public RemovedId deleteContactById(String id) {
-        contactRepository.deleteById(Integer.valueOf(id));
+        contactRepository.deleteById(Long.valueOf(id));
         return RemovedId.builder().data(id).build();
     }
 

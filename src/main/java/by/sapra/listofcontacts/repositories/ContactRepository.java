@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContactRepository {
-    Optional<ContactEntity> deleteById(Integer id);
+    Optional<ContactEntity> deleteById(Long id);
 
-    Optional<ContactEntity> findById(String id);
+    Optional<ContactEntity> findById(Long id);
 
     List<ContactEntity> findAll();
 
