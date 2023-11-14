@@ -13,7 +13,7 @@ public class TestListOfContactsApplication {
 	@Bean
 	@ServiceConnection
 	PostgreSQLContainer<?> postgresContainer() {
-		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:12.3"));
+		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:14.5"));
 	}
 
 	public static void main(String[] args) {
