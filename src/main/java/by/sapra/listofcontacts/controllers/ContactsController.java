@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class ContactsController {
         return "contacts";
     }
 
-    @PostMapping("/contact/delete/{id}")
+    @GetMapping("/contact/delete/{id}")
     public String handleDeleteContact(@PathVariable(name = "id") String id) {
         contactService.deleteContactById(id);
         return "redirect:/contacts";
