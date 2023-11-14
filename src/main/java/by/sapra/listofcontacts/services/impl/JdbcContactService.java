@@ -56,7 +56,7 @@ class JdbcContactService implements ContactService {
 
     private ContactEntity mapToEntity(ContactPayload payload) {
         return ContactEntity.builder()
-                .id(payload.getId() != null ? Long.valueOf(payload.getId()) : null)
+                .id((payload.getId() != null) && (!payload.getId().isEmpty()) ? Long.valueOf(payload.getId()) : null)
                 .phone(payload.getPhone())
                 .lastName(payload.getLastName())
                 .firstName(payload.getFirstName())
